@@ -124,7 +124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports['default'] = function () {
 	    'ngInject';
 	
-	    $get.$inject = ["$log", "$ionicConfig", "$rootScope", "$timeout", "$state", "$location", "$ionicHistory", "$ionicPlatform", "$q"];
+	    $get.$inject = ["$log", "$ionicConfig", "$rootScope", "$timeout", "$state", "$location", "$ionicHistory", "$ionicPlatform", "$q", "$window"];
 	    var enabled = true,
 	        $stateChangeStart = null,
 	        $stateChangeSuccess = null,
@@ -257,7 +257,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this;
 	    }
 	
-	    function $get($log, $ionicConfig, $rootScope, $timeout, $state, $location, $ionicHistory, $ionicPlatform, $q) {
+	    function $get($log, $ionicConfig, $rootScope, $timeout, $state, $location, $ionicHistory, $ionicPlatform, $q, $window) {
 	        'ngInject';
 	
 	        var legacyGoBack = undefined,
@@ -326,12 +326,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var transitionOptions = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 	
 	            if (!state) {
-	                $log.debug('[native transition] cannot change state without a state...');
+	                //$log.debug('[native transition] cannot change state without a state...');
 	                return;
 	            }
 	
 	            if ($state.is(state, stateParams) && !stateOptions.reload) {
-	                $log.debug('[native transition] same state transition are not possible');
+	                // $log.debug('[native transition] same state transition are not possible');
 	                return;
 	            }
 	
@@ -641,7 +641,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        function goBack(backCount) {
 	
-	            if (!$ionicHistory.backView()) {
+	            if (!$window.history.length) {
 	                // Close the app when no more history
 	                if (navigator.app) {
 	                    navigator.app.exitApp();
@@ -674,17 +674,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            unregisterToStateChangeStartEvent();
 	            if (toStateTransition.nativeTransitionsBack === null) {
-	                $log.debug('[native transition] transition disabled for this state', toStateTransition);
+	                // $log.debug('[native transition] transition disabled for this state', toStateTransition);
 	                return $timeout(function () {
-	                    return $ionicHistory.goBack(backCount);
+	                    $window.history.back();
+	                    //$ionicHistory.goBack(backCount)
 	                }).then(function () {
 	                    return registerToStateChangeStartEvent();
 	                });
 	            }
-	            $log.debug('nativepagetransitions goBack', backCount, stateName, currentStateTransition, toStateTransition);
+	            // $log.debug('nativepagetransitions goBack', backCount, stateName, currentStateTransition, toStateTransition);
 	            return transition('back', currentStateTransition, toStateTransition).then(function () {
 	                return $timeout(function () {
-	                    return $ionicHistory.goBack(backCount);
+	                    $window.history.back();
 	                });
 	            });
 	        }
