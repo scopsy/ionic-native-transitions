@@ -372,8 +372,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    angular.extend(window.plugins.nativepagetransitions.globalOptions, getDefaultOptions());
 	                }
 	                $rootScope.$ionicGoBack = goBack;
-	                backButtonUnregister = $ionicPlatform.registerBackButtonAction(function (e, count) {
-	                    return goBack(count);
+	                backButtonUnregister = $ionicPlatform.registerBackButtonAction(function () {
+	                    return goBack();
 	                }, 100);
 	                registerToRouteEvents();
 	            } else {
@@ -622,7 +622,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Init nativepagetransitions plugin
 	         */
 	        function init() {
-	            legacyGoBack = $rootScope.$ionicGoBack;
+	            legacyGoBack = $window.history.back;
 	            if (!isEnabled()) {
 	                $log.debug('[native transition] The plugin is either disabled or nativepagetransitions plugin by telerik is not present. If you are getting this message in a browser, this is normal behavior, native transitions only work on device.');
 	                return;
@@ -639,7 +639,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @description Navigate back in the current history stack with a back navigation transition
 	         * @param {number} backCount - The number of views to go back to. default will be the previous view
 	         */
-	        function goBack(backCount) {
+	        function goBack() {
 	            if (!$window.history.length) {
 	                // Close the app when no more history
 	                if (navigator.app) {
